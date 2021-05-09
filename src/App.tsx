@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import logo from "./logo.svg";
+import "./App.css";
+import ReactPlayer from "react-player";
+import SideMenu from "./components/side-menu/side-menu.component";
+import { State } from "./redux/store";
 
 function App() {
+  const [videoFilePath, setVideoFileURL] = useState("");
+  const { video } = useSelector((state: State) => state.video);
+  const handleVideoUpload = (event: any) => {
+    console.log("URL " + event.target.files[0]);
+    setVideoFileURL(URL.createObjectURL(event.target.files[0]));
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <input type="file" onChange={handleVideoUpload} />
+        <ReactPlayer
+          url={video.path}
+          controls={true}
+          onError={(error) => {
+            console.log(error);
+          }}
+        />
       </header>
+      <SideMenu></SideMenu>
     </div>
   );
 }
